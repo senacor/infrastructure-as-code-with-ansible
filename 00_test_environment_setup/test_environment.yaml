@@ -1,0 +1,20 @@
+---
+
+# Try to ping the vagrant vm to check if the setup works
+- hosts: vagrantvm
+  gather_facts: False
+  tasks:
+  - name: Check if you are able to ping the vagrant VM
+    ping:
+
+
+# Try to gather facts from an AWS VPC. This should work if the AWS Account is working.
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+  - name: Check if you are able to connect to AWS
+    ec2_vpc_net_facts:
+      region: us-west-2
+
+
