@@ -15,7 +15,7 @@ The following tool are needed as precondition and have to be installed:
 
 We will use an vagrant vm as a local test environment. The vagrant file located in the folder VMs is an Ubuntu box enhanced with:
 
-* Some needed port forbiddings to access services running inside.
+* Some needed port forwarding's to access services running inside.
 * The usage of the user owned ssh-key. (If you don't have an existing key under ~/.ssh/id_rsa please create one)
 * The provisioning of the ssh public key in the known_host file.
 * The provisioning of python as the only prerequisite for ansible.
