@@ -1,0 +1,1 @@
+ansible web -i hosts -m systemd  -a "state=started name=nginx" --become

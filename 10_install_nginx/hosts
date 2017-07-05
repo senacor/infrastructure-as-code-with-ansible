@@ -1,0 +1,4 @@
+[web]
+dockerhost:2222 ansible_user=ubuntu
+
+

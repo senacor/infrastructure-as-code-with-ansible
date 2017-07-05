@@ -1,0 +1,9 @@
+- hosts: web
+  gather_facts: true
+  become: yes
+  tasks:
+  - name: Update the repository cache and ensure that package "nginx" is present
+    apt:
+      name: nginx
+      state: present
+      update_cache: yes
