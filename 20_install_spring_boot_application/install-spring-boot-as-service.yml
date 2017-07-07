@@ -1,0 +1,61 @@
+# Try to gather facts from an AWS VPC. This should work if the AWS Account is working.
+- hosts: service
+  gather_facts: true
+  become: yes
+  tasks:
+
+  - name: Ensure Java has been installed on the system
+    apt:
+      name: default-jre
+      update_cache: yes
+
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+  - name: download the springboot jar file
+    shell: "cp -f /root/.m2/repository/org/springframework/samples/{{ app_name }}/{{ version }}/{{ app_name }}-{{ version }}.jar files/{{ app_name }}-{{ version }}.jar"
+  vars:
+    - version: 1.5.1
+    - app_name: spring-petclinic
+
+    
+
+- hosts: service
+  gather_facts: true
+  become: yes
+  tasks:
+  
+  - name: ensure directory to store the application exists. 
+    file:
+      path: "/var/{{ app_name }}"
+      state: directory
+      mode: 0755
+
+  - name: Copy the service jar arthefact to the server
+    copy:
+      src: "files/{{ app_name }}-{{ version }}.jar"
+      dest: "/var/{{ app_name }}/{{ app_name }}-{{ version }}.jar"
+      mode: u=rwx,g=rx,o=r
+
+  - name: Ensure that a systemd service is available
+    template:
+      src: templates/service.j2
+      dest: "/etc/systemd/system/{{ app_name }}.service"
+
+  - name: Ensure systemd service ist started
+    systemd: state=restarted name={{ app_name }} daemon_reload=yes
+
+
+  - name: Check that you can connect (GET) to a page and it returns a status 200
+    uri:
+      url: http://localhost:8080/
+    register: call_result
+    until: call_result.status == 200
+    retries: 20
+    delay: 1
+      
+  vars:
+    - version: 1.5.1
+    - app_name: spring-petclinic
