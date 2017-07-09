@@ -1,20 +1,23 @@
-# Exercise 1: Get in touch and install nginx
+# Exercise 3: Install nginx and forward to the application
 
 ## Description: 
 
-In this exercise we get in touch with Ansible. For this we provide our Vagrant VM with the first peace of software. 
+At least we now want to access our application over an nginx loadbalancer. 
 
 
 ## Task:
 
-Please create a playbook to install an nginx webserver to our vagrant vm. Currently we just need an empty installation without
-further configuration
+Please create a playbook to install an nginx webserver to our vagrant vm. 
+The nginx should forward port 80 with context /petclinic  to http://127.0.0.1:8080
+
 
 To do that provide the following steps:
 
 1. Create a inventory file with a group "web" which contsin the connection data to the vagrant vm.
 2. Create a playbook e.g. install_nginx.yml which install the nginx package to all servers in the web-group.
-3. Run the playbook by using the created hostfile like:
+3. Add a service config file to forward to the petclinic
+4. Add a handler to restart the nginx at the end of the playbook. 
+5. Add a check if the endpoint is reachable
 
      
      ansible-playbook install_nginx.yml -i hosts 
