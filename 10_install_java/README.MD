@@ -16,12 +16,12 @@ To do that provide the following steps:
 3. Run the playbook by using the created hostfile like:
 
      
-     ansible-playbook install_nginx.yml -i hosts 
+     ansible-playbook install_java.yml -i hosts 
 
 **Hint**: The command to instal the nginx at ubunto is:
 
      sudo apt-get update
-     sudo apt-get install java
+     sudo apt-get install default-jre
 
 
 ## Test
