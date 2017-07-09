@@ -37,5 +37,5 @@ You can run ansible modules directly in the console, with the ad-hoc mode. Try a
 
      ansible web -i hosts -m ping
 
-Try to stop and start the nginx service with this console command.
+Try to call "java -version" with this ansible console command.
 
