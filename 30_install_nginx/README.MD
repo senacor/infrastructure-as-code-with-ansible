@@ -34,15 +34,7 @@ After running the playbook you should be able to call the default nginx page on 
 
      http://localhost:8080/
      
-or in the console with:
+or call the pet-clinit with:
 
-     curl http://dockerhost:8080
+     curl http://dockerhost:8080/petclinic
       
-## Optional
-
-You can run ansible modules directly in the console, with the ad-hoc mode. Try as an example:
-
-     ansible web -i hosts -m ping
-
-Try to stop and start the nginx service with this console command.
-
