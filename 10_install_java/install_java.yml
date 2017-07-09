@@ -1,0 +1,10 @@
+
+- hosts: all
+  gather_facts: true
+  become: yes
+  tasks:
+
+  - name: Ensure Java has been installed on the system
+    apt:
+      name: default-jre
+      update_cache: yes
