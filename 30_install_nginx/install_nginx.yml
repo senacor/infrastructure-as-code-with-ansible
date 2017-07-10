@@ -7,3 +7,43 @@
       name: nginx
       state: present
       update_cache: yes
+
+  - name: insert/update location configuration block in default config
+    blockinfile:
+      path: /etc/nginx/sites-available/default
+      insertafter: "server_name _;"
+      block: |
+        # forward to pet-clinit url
+        location /{{ proxy_context }}  {
+            rewrite ^/{{ proxy_context }}(.*) /$1 break;
+            proxy_pass {{ proxy_pet_clinic_url }};
+        }
+    notify: "nginx config changed"
+
+  - name: activate config by setting file link
+    file:
+      src: "/etc/nginx/sites-available/default"
+      dest: "/etc/nginx/sites-enabled/default"
+      state: link
+    notify: "nginx config changed"
+
+  - name: Ensure systemd service ist started
+    systemd: state=restarted name=nginx daemon_reload=yes
+
+  handlers:
+  - name: restart nginx
+    service: name=nginx state=restarted
+    listen: "nginx config changed"
+
+  - name: Check that you can connect (GET) to a page and it returns a status 200
+    uri:
+      url: http://localhost/petclinic  # URL on the target system
+    register: call_result
+    until: call_result.status == 200
+    retries: 20
+    delay: 1
+    listen: "nginx config changed"
+
+  vars:
+    - proxy_pet_clinic_url: http://127.0.0.1:8080
+    - proxy_context: petclinic
