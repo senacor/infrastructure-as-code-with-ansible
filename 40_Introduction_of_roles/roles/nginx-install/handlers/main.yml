@@ -1,0 +1,15 @@
+---
+# handlers file for nginx-install
+
+- name: restart nginx
+  service: name=nginx state=restarted
+  listen: "nginx config changed"
+
+- name: Check that you can connect (GET) to a page and it returns a status 200
+  uri:
+    url: http://localhost:80  # URL on the target system
+  register: call_result
+  until: call_result.status == 200
+  retries: 20
+  delay: 1
+  listen: "nginx config changed"

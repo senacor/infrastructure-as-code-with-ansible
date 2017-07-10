@@ -1,0 +1,19 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+  - name: download the springboot jar file
+    shell: "cp -f /root/.m2/repository/org/springframework/samples/{{ app_name }}/{{ app_version }}/{{ app_name }}-{{ app_version }}.jar files/{{ app_name }}-{{ app_version }}.jar"
+  vars:
+    - app_version: 1.5.1
+    - app_name: spring-petclinic
+
+
+
+- hosts: service
+  gather_facts: true
+  become: yes
+  roles:
+  -  ../../spring-boot-application-install

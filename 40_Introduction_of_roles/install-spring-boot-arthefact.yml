@@ -1,0 +1,8 @@
+---
+
+- hosts: service
+  gather_facts: true
+  become: yes
+  roles:
+  -  java-install
+  -  spring-boot-application-install

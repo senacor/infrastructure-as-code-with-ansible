@@ -1,0 +1,6 @@
+---
+- hosts: all
+  gather_facts: true
+  become: yes
+  roles:
+    - ../../java-install

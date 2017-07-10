@@ -1,0 +1,15 @@
+[Unit]
+Description=Spring boot server: {{ app_name }}
+After=syslog.target
+
+[Service]
+User=root
+#Create an excecutable JAR with spring boot. 
+#<configuration>
+#    <executable>true</executable>
+#</configuration>
+ExecStart=/var/{{ app_name }}/{{ app_name }}-{{ app_version }}.jar SuccessExitStatus=143
+#ExecStart=/usr/bin/java -jar /var/{{ app_name }}/{{ app_name }}-{{ app_version }}.jar SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

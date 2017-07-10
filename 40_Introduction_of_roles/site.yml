@@ -1,0 +1,5 @@
+---
+
+- include: retrieve-spring-boot-arthefact.yml
+- include: install-spring-boot-arthefact.yml
+- include: install-webstack.yml

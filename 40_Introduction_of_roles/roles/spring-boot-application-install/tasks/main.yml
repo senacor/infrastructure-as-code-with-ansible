@@ -1,0 +1,31 @@
+---
+# tasks file for spring-boot-application-install
+
+  - name: ensure directory to store the application exists.
+    file:
+      path: "/var/{{ app_name }}"
+      state: directory
+      mode: 0755
+
+  - name: Copy the service jar arthefact to the server
+    copy:
+      src: "files/{{ app_name }}-{{ app_version }}.jar"
+      dest: "/var/{{ app_name }}/{{ app_name }}-{{ app_version }}.jar"
+      mode: u=rwx,g=rx,o=r
+
+  - name: Ensure that a systemd service is available
+    template:
+      src: templates/service.j2
+      dest: "/etc/systemd/system/{{ app_name }}.service"
+
+  - name: Ensure systemd service ist started
+    systemd: state=restarted name={{ app_name }} daemon_reload=yes
+
+
+  - name: Check that you can connect (GET) to a page and it returns a status 200
+    uri:
+      url: http://localhost:8080/
+    register: call_result
+    until: call_result.status == 200
+    retries: 20
+    delay: 1
