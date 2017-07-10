@@ -12,7 +12,8 @@
     lineinfile:
       path: /etc/nginx/sites-available/default
       regexp: '^\s*try_files \$uri \$uri/ =404;'
-      line: 'proxy_pass {{ proxy_pet_clinic_url }};'
+      line: 'proxy_pass {{ proxy_target_url }};'
+      backrefs: yes
     notify: "nginx config changed"
 
   - name: Ensure systemd service ist started
@@ -33,4 +34,4 @@
     listen: "nginx config changed"
 
   vars:
-    - proxy_pet_clinic_url: http://127.0.0.1:8080
+    - proxy_target_url: http://127.0.0.1:8080
