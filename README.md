@@ -22,7 +22,7 @@ We will use an vagrant vm as a local test environment. The vagrant file located 
  
 After installing VirtualBox and Vagrant run the following command inside the VMs folder to startup the ubunto box:
 
-    vagrand up
+    vagrant up
     
 This command will startup an Ubunto VM inside you VirtualBox. You can ssh into this Box with the next command:
 
