@@ -1,0 +1,53 @@
+---
+
+- name: Does an VPC with the given name alredy exist
+  ec2_vpc_net_facts:
+    region: "{{region}}"
+    filters:
+      "tag:Name": "{{application_name}}-vpc"
+  register: vpc_test
+
+- name: Set informatiom from existing VPC
+  set_fact:
+    vpc: "{{vpc_test.vpcs[0]}}"
+  when: vpc_test.vpcs != []
+
+- name: Ensure Database Securitygroup is absent
+  ec2_group:
+    name: "{{application_name}}-sg-db"
+    description: an example EC2 group
+    vpc_id: "{{vpc.id}}"
+    region: "{{region}}"
+    state: absent
+
+- name: Ensure ECS Securitygroup is absent
+  ec2_group:
+    name: "{{application_name}}-sg-esc"
+    description: an example EC2 group
+    vpc_id: "{{vpc.id}}"
+    region: "{{region}}"
+    state: absent
+  register: task_result
+  until: task_result.rc == 0
+  retries: 10
+  delay: 5
+
+- name: Ensure Loadbalancer Securitygroup is absent
+  ec2_group:
+    name: "{{application_name}}-sg-elb"
+    description: an example EC2 group
+    vpc_id: "{{vpc.id}}"
+    region: "{{region}}"
+    state: absent
+  register: task_result
+  until: task_result.rc == 0
+  retries: 10
+  delay: 5
+
+
+
+
+
+
+
+

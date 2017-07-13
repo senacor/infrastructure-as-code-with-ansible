@@ -1,0 +1,24 @@
+---
+
+- name: Ensure that there is an igw present at the VPC
+  ec2_vpc_igw:
+    vpc_id: "{{vpc.id}}"
+    state: present
+    region: "{{region}}"
+  register: igw
+
+- name: Create public subnets
+  ec2_vpc_subnet:
+    state: present
+    region: "{{region}}"
+    vpc_id: "{{vpc.id}}"
+    az: "{{item.az}}"
+    cidr: "{{item.cidir}}"
+    resource_tags:
+      Name: "{{item.Name}}"
+      CostCenter: "{{item.CostCenter}}"
+      Networkkind: "{{item.Networkkind}}"
+      NAT: "{{item.nat}}"
+      Usage: "{{item.Usage}}"
+  with_items: "{{subnetwork_def}}"
+

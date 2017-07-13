@@ -1,0 +1,117 @@
+---
+
+- name: gather the VPC information
+  ec2_vpc_net_facts:
+    region: "{{region}}"
+    filters:
+      "tag:Name": "{{application_name}}-vpc"
+  register: vpc_result
+
+- name: Set informatiom from existing VPC
+  set_fact:
+    vpc: "{{vpc_result.vpcs[0]}}"
+  when: vpc_result.vpcs != []
+
+- name: Gather subnet facts for all subnets in the VPC
+  ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: "{{vpc.id}}"
+    region: "{{region}}"
+  register: subnetworks
+  when: vpc is defined
+
+- name: debug the RT
+  debug:
+    msg: "{{ subnetworks.subnets|map(attribute='tags')|map(attribute='Name')|list() }}"
+
+- name: Set up subnet routing tables to default
+  ec2_vpc_route_table:
+    vpc_id: "{{vpc.id}}"
+    region: "{{region}}"
+    tags:
+      Name: "default"
+      Type: "custom"
+    subnets: "{{ subnetworks.subnets|map(attribute='tags')|map(attribute='Name')|list() }}"
+    routes:
+      - dest: "{{vpc_cidr_block}}"
+        gateway_id: "local"
+  register: private_route_table
+  when: vpc is defined
+  with_items: "{{subnetworks.subnets}}"
+
+- name: receive the name of the public subnetwork to add the NAT Gatway
+  ec2_vpc_subnet_facts:
+    filters:
+      "tag:NAT": "yes"
+    region: "{{region}}"
+  register: public_subnet_nat
+  when: vpc is defined
+
+- name: Get nat gateways for Subnet
+  ec2_vpc_nat_gateway_facts:
+    region: "{{region}}"
+    filters:
+      subnet-id: "{{public_subnet_nat.subnets.0.id}}"
+  register: existing_nat_gateways
+  when:
+    - vpc is defined
+    - public_subnet_nat.subnets != []
+
+- name: Delete nat gateway using discovered nat gateways from facts module.
+  ec2_vpc_nat_gateway:
+    state: absent
+    region: "{{region}}"
+    wait: yes
+    nat_gateway_id: "{{ item.nat_gateway_id }}"
+    release_eip: yes
+  with_items: "{{ existing_nat_gateways.result | default([]) }}"
+
+
+- name: Ensure that there is an igw deleted at the VPC
+  ec2_vpc_igw:
+    vpc_id: "{{vpc.id}}"
+    state: absent
+    region: "{{region}}"
+  when: vpc is defined
+
+- name: Remove subnets for VPC
+  ec2_vpc_subnet:
+    state: absent
+    region: "{{region}}"
+    vpc_id: "{{vpc.id}}"
+    cidr: "{{item.cidr_block}}"
+  with_items: "{{subnetworks.subnets}}"
+  when: vpc is defined
+
+- ec2_vpc_route_table_facts:
+    region: "{{region}}"
+    filters:
+      vpc-id: "{{vpc.id}}"
+      "tag:Type": custom
+  register: result_rt
+  when: vpc is defined
+
+- name: Delete routing tables of the VPC
+  ec2_vpc_route_table:
+    vpc_id: "{{vpc.id}}"
+    region: "{{region}}"
+    route_table_id: "{{item.id}}"
+    lookup: id
+    state: absent
+  with_items: "{{result_rt.route_tables}}"
+  when: vpc is defined
+
+- name: Ensure that the VPC is deleted
+  ec2_vpc_net:
+    name: "{{vpc.tags.Name}}"
+    cidr_block: "{{vpc.cidr_block}}"
+    region: "{{region}}"
+    tags:
+      module: ec2_vpc_net
+      CostCenter: SummerCamp
+    tenancy: dedicated
+    state: absent
+  when: vpc is defined
+
+
+

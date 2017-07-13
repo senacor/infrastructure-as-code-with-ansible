@@ -1,0 +1,20 @@
+region: eu-west-1
+application_name: ansible-aws-pedclinic
+cost_center: DevOps
+status: present
+
+subnetwork_def:
+    # public subnetworks
+    - {az: "{{region}}a", cidir: 10.0.1.0/24, Name: "{{application_name}}-nw-public-a", nat: "yes", Networkkind: public, CostCenter: "{{cost_center}}", Usage: "ELB" }
+    - {az: "{{region}}b", cidir: 10.0.2.0/24, Name: "{{application_name}}-nw-public-b", nat: "no" , Networkkind: public, CostCenter: "{{cost_center}}", Usage: "ELB" }
+    - {az: "{{region}}c", cidir: 10.0.3.0/24, Name: "{{application_name}}-nw-public-c", nat: "no" , Networkkind: public, CostCenter: "{{cost_center}}", Usage: "ELB" }
+    # private application subnetworks
+    - {az: "{{region}}a", cidir: 10.0.11.0/24, Name: "{{application_name}}-priv-app-a", nat: "no", Networkkind: private, CostCenter: "{{cost_center}}", Usage: "ESC" }
+    - {az: "{{region}}b", cidir: 10.0.12.0/24, Name: "{{application_name}}-priv-app-b", nat: "no", Networkkind: private, CostCenter: "{{cost_center}}", Usage: "ESC" }
+    - {az: "{{region}}c", cidir: 10.0.13.0/24, Name: "{{application_name}}-priv-app-c", nat: "no", Networkkind: private, CostCenter: "{{cost_center}}", Usage: "ESC" }
+    # private db subnetworks
+    - {az: "{{region}}a", cidir: 10.0.21.0/24, Name: "{{application_name}}-priv-db-a", nat: "no", Networkkind: private, CostCenter: "{{cost_center}}", Usage: "DB" }
+    - {az: "{{region}}b", cidir: 10.0.22.0/24, Name: "{{application_name}}-priv-db-b", nat: "no", Networkkind: private, CostCenter: "{{cost_center}}", Usage: "DB" }
+    - {az: "{{region}}c", cidir: 10.0.23.0/24, Name: "{{application_name}}-priv-db-c", nat: "no", Networkkind: private, CostCenter: "{{cost_center}}", Usage: "DB" }
+
+
