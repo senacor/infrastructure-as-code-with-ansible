@@ -32,4 +32,11 @@
       state: restarted
       daemon_reload: yes
       name: "{{app.service}}"
+  - name: make sure the app is running
+    uri:
+      url: http://localhost:8080/
+    register: webpage
+    until: webpage.status == 200
+    retries: 10
+    delay: 2
 
