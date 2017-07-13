@@ -1,6 +1,7 @@
 - hosts: web service
   tasks:
   - name: install java
+    become: true
     apt:
       name: default-jre
       state: latest
