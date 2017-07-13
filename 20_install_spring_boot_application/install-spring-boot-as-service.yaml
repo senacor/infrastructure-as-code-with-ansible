@@ -25,7 +25,7 @@
           name: pet-clinic
     - name: Check that health check is successful
       uri:
-        return_content: yes
+        return_content: no
         url: http://localhost:8080
       register: health_check_content
       until: health_check_content.status == 200

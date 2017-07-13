@@ -1,5 +1,7 @@
 ---
 
+# ansible-playbook -i 10_install_java/hosts 10_install_java/install_java.yaml
+
 - hosts: all
   tasks:
     - name: ensure latest jre is installed
