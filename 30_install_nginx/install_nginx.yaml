@@ -1,0 +1,41 @@
+---
+
+# ansible-playbook 30_install_nginx/install_nginx.yaml -i 30_install_nginx/hosts
+
+- hosts: web
+  become: true
+  tasks:
+    - name: Ensure latest nginx is installed
+      apt:
+        update_cache: yes
+        name: nginx
+        state: latest
+    - name: Ensure proxy_pass in default sites-available is set
+      lineinfile:
+        path: '/etc/nginx/sites-available/default'
+        line: 'proxy_pass http://localhost:8080;'
+        insertafter: '^\s+location / \{'
+      notify: 'reload nginx'
+  handlers:
+    - name: check health
+      listen: 'check health'
+      uri:
+        return_content: yes
+        url: http://localhost:80
+      register: health_check_content
+      until:
+        - health_check_content.status == 200
+        - "'clinic' in health_check_content.content"
+      retries: 5
+      delay: 5
+    - name: reload nginx
+      listen: 'reload nginx'
+      systemd:
+        name: nginx
+        state: reloaded
+      notify: 'check health'
+#    - name: check content
+#      listen: 'check health'
+#      fail:
+#      when: "'clinic' not in health_check_content.content"
+
