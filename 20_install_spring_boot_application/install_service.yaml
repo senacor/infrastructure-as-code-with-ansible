@@ -9,7 +9,7 @@
     copy: 
       src: /project/spring-petclinic/target/spring-petclinic-1.5.1.jar
       dest: /home/ubuntu/
-      mode: "a+rx"
+      mode: "a+xr"
   - name: 'Ensure systemd script exists'
     copy:
       src: petclinic.service
