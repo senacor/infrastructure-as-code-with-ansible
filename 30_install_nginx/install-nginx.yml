@@ -1,0 +1,33 @@
+---
+
+- hosts: web
+  become: true
+  gather_facts: True
+  tasks:
+    - name: Update cache and install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: true
+    - name: create nginx config
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        mode: 0755
+      notify: "restart nginx"
+    - name: create nginx service
+      template:
+        src: nginx-service.j2
+        dest: /etc/systemd/system/nginx.service
+        mode: 0755
+    - name: Check that you can connect (GET) to a page and it returns a status 200
+      uri:
+        url: http://localhost:80
+      register: webpage
+      until: webpage.status == 200
+      retries: 10
+      delay: 2
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+      listen: "restart nginx"
