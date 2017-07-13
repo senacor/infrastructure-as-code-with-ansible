@@ -1,0 +1,11 @@
+- hosts: all
+  tasks: 
+  - name: 'Ensure java is installed'
+    apt:
+      update_cache: yes
+      name: default-jre
+    become: true
+  - name: 'Ensure spring boot app exists on remote machine'
+    copy: 
+      src: /project/spring-petclinic/target/spring-petclinic-1.5.1.jar
+      dest: /home/ubuntu/
