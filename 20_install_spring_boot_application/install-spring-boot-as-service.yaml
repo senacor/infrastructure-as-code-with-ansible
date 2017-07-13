@@ -3,9 +3,9 @@
 #ansible-playbook -i 20_install_spring_boot_application/hosts 20_install_spring_boot_application/install-spring-boot-as-service.yaml --extra-vars "path_to_app_file=/opt/spring-petclinic-1.5.1.jar path_to_src_app_file=files/spring-petclinic-1.5.1.jar"
 
 - hosts: service
+  become: true
   tasks:
     - name: Ensure latest Pet-Clinic build is copied to host
-      become: true
       copy:
         src: "{{ path_to_src_app_file }}"
         dest: "{{ path_to_app_file }}"
@@ -13,7 +13,6 @@
         group: root
         mode: 0755
     - name: Ensure SystemD-App configuration has the latest version
-      become: true
       template:
         src: ./templates/pet-clinic.service
         dest: /etc/systemd/system/pet-clinic.service
