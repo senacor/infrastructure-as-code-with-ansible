@@ -28,4 +28,3 @@
       retries: 10
       delay: 2
       listen: "restart nginx"
-
