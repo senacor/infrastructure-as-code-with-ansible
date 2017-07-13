@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  tasks:
+    - name: install jre
+      become: true
+      apt:
+        update_cache: yes
+        name: default-jre
+        state: latest
