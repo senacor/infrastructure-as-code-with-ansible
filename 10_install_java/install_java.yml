@@ -1,7 +1,7 @@
 ---
 
 - hosts: all
-  gather_facts: False
+  gather_facts: True
   tasks:
     - name: Update cache and install java
       apt:
