@@ -1,4 +1,4 @@
-- hosts: vagrantvm
+- hosts: web service
   tasks:
   - name: install java
     apt:
