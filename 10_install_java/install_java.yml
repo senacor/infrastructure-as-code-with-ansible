@@ -1,0 +1,12 @@
+---
+
+- hosts: all
+  gather_facts: False
+  tasks:
+    - name: Update cache and install java
+      apt:
+        name: default-jre
+        state: present
+        update_cache: true
+      become: true
+      become_user: root
