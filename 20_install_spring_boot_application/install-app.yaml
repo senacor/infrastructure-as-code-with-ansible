@@ -1,4 +1,6 @@
 - hosts: web
+  vars:
+    app: { user: petclinic, service: petclinic, filename: spring-petclinic-1.5.1.jar, desc: Spring Boot Petclinic }
   tasks:
   - name: install java
     become: true
@@ -6,27 +8,28 @@
       update_cache: yes
       name: default-jre
       state: latest
-  - name: create petclinic user
+  - name: create user {{app.user}}
     become: true
     user:
-      name: petclinic
+      name: "{{app.user}}"
   - name: copy jar file
     become: true
     copy:
-      src: ./files/spring-petclinic-1.5.1.jar
-      dest: /home/petclinic/spring-petclinic-1.5.1.jar
-      owner: petclinic
+      src: ./files/{{app.filename}}
+      dest: /home/{{app.user}}/{{app.filename}}
+      owner: "{{app.user}}"
       mode: 0744
-  - name: copy systemd config
+  - name: create systemd config
     become: true
-    copy:
-      src: ./files/petclinic.service
-      dest: /etc/systemd/system/petclinic.service
-      owner: petclinic
+    template:
+      src: ./templates/spring-boot.service.j2
+      dest: /etc/systemd/system/{{app.service}}.service
+      owner: "{{app.user}}"
       mode: 0644
-  - name: petclinic is running
+  - name: "{{app.service}} is running"
     become: true
     systemd:
       state: restarted
-      name: petclinic
+      daemon_reload: yes
+      name: "{{app.service}}"
 
