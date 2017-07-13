@@ -2,7 +2,7 @@
 
 - hosts: all
   tasks:
-    - name: install jre
+    - name: ensure latest jre is installed
       become: true
       apt:
         update_cache: yes
