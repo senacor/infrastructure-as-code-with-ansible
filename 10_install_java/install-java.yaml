@@ -1,0 +1,6 @@
+- hosts: vagrantvm
+  tasks:
+  - name: install java
+    apt:
+      name: default-jre
+      state: latest
