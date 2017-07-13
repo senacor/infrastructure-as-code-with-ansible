@@ -35,7 +35,6 @@
     - name: Check that you can connect (GET) to a page and it returns a status 200
       uri:
         url: http://localhost:8080
-        return_content: yes
       register: webpage
       until: webpage.status == 200
       retries: 10
