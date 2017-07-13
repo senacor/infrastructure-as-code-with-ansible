@@ -1,0 +1,37 @@
+- hosts: web
+  become: true
+  tasks: 
+  - name: 'Update packages'
+    apt:
+      update_cache: yes
+  - name: 'Ensure java is installed'
+    apt:
+      name: default-jre
+  - name: 'Ensure spring boot app exists on remote machine'
+    copy: 
+      src: /project/spring-petclinic/target/spring-petclinic-1.5.1.jar
+      dest: /home/ubuntu/
+      mode: "a+rx"
+  - name: 'Ensure systemd script for petclinic exists'
+    copy:
+      src: petclinic.service
+      dest: /etc/systemd/system/
+      mode: "a+rx"
+  - name: 'Ensure petclinic service is registered'
+    systemd:
+      name: petclinic.service
+      enabled: yes
+      daemon-reload: yes
+      state: restarted
+  - name: 'Ensure nginx is installed'
+    apt:
+      name: nginx
+  - name: 'Ensure nginx is configured'
+    copy:
+      src: nginx.conf
+      dest: /etc/nginx/sites-available/default
+    notify: "configured_nginx"
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+      listen: "configured_nginx"

@@ -1,0 +1,10 @@
+[Unit]
+Description=A Spring Boot application PETCLINIC
+After=syslog.target
+ 
+[Service]
+User=ubuntu
+ExecStart=/home/ubuntu/spring-petclinic-1.5.1.jar SuccessExitStatus=143 
+ 
+[Install] 
+WantedBy=multi-user.target
