@@ -14,6 +14,19 @@
     become: true
     copy:
       src: ./files/spring-petclinic-1.5.1.jar
-      dest: ~/spring-petclinic-1.5.1.jar
+      dest: /home/petclinic/spring-petclinic-1.5.1.jar
+      owner: petclinic
+      mode: 0744
+  - name: copy systemd config
+    become: true
+    copy:
+      src: ./files/petclinic.service
+      dest: /etc/systemd/system/petclinic.service
       owner: petclinic
       mode: 0644
+  - name: petclinic is running
+    become: true
+    systemd:
+      state: restarted
+      name: petclinic
+
