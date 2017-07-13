@@ -1,0 +1,10 @@
+[Unit]
+Description=A Spring Boot application
+After=syslog.target
+
+[Service]
+User=ubuntu
+ExecStart={{full_path_to_jar_at_dest}} SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

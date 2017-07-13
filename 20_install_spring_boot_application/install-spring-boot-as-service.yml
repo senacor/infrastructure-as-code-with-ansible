@@ -1,0 +1,39 @@
+---
+
+- hosts: all
+  vars:
+    full_path_to_jar_at_dest: /opt/spring-petclinic-1.5.1.jar
+  gather_facts: True
+  tasks:
+    - name: Update cache and install java
+      apt:
+        name: default-jre
+        state: present
+        update_cache: true
+      become: true
+      become_user: root
+    - name: Copy petclinic executable to hosts
+      copy:
+        src: /project/spring-petclinic/target/spring-petclinic-1.5.1.jar
+        dest: "{{full_path_to_jar_at_dest}}"
+        owner: ubuntu
+        group: ubuntu
+        mode: 0755
+      become: true
+    - name: install petclinic systemd unit file
+      template:
+        src: service.j2
+        dest: /etc/systemd/system/myservice.service
+        mode: 0755
+      become: true
+    - name: restart petclinic service
+      systemd:
+        state: started
+        daemon_reload: yes
+        name: myservice
+      become: true
+    - name: Check that you can connect (GET) to a page and it returns a status 200
+      uri:
+        url: http://dockerhost:18080
+        return_content: yes
+      register: webpage
