@@ -20,3 +20,4 @@
       name: petclinic.service
       enabled: yes
       state: started
+    become: true
