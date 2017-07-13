@@ -1,0 +1,19 @@
+---
+# tasks file for nginx-install
+
+- name: Update the repository cache and ensure that package "nginx" is present
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: insert/update location configuration block in default config
+  lineinfile:
+    path: /etc/nginx/sites-available/default
+    regexp: '^\s*try_files \$uri \$uri/ =404;'
+    line: 'proxy_pass {{ proxy_target_url }};'
+    backrefs: yes
+  notify: "nginx config changed"
+
+- name: Ensure systemd service exists and is started
+  systemd: state=restarted name=nginx daemon_reload=yes
