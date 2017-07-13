@@ -22,9 +22,12 @@
         mode: 0755
     - name: Check that you can connect (GET) to a page and it returns a status 200
       uri:
+        return_content: yes
         url: http://localhost:80
-      register: webpage
-      until: webpage.status == 200
+      register: health_check_content
+      until:
+        - health_check_content.status == 200
+        - health_check_content.content.find("PetClinic") != -1
       retries: 10
       delay: 2
   handlers:
