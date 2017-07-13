@@ -6,4 +6,8 @@
       update_cache: yes
       name: nginx
       state: latest
-
+  - name: map port 80 to 8080
+    lineinfile:
+      path: "/etc/nginx/sites-available/default"
+      insertafter: "^[\\s\\t]*location / \\{"
+      line: "proxy_pass http://127.0.0.1:8080;"
