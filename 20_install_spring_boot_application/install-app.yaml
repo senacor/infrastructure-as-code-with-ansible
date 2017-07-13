@@ -1,0 +1,19 @@
+- hosts: web
+  tasks:
+  - name: install java
+    become: true
+    apt:
+      update_cache: yes
+      name: default-jre
+      state: latest
+  - name: create petclinic user
+    become: true
+    user:
+      name: petclinic
+  - name: copy jar file
+    become: true
+    copy:
+      src: ./files/spring-petclinic-1.5.1.jar
+      dest: ~/spring-petclinic-1.5.1.jar
+      owner: petclinic
+      mode: 0644
