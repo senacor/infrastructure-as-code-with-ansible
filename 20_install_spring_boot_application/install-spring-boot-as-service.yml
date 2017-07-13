@@ -28,12 +28,15 @@
       become: true
     - name: restart petclinic service
       systemd:
-        state: started
+        state: restarted
         daemon_reload: yes
         name: myservice
       become: true
     - name: Check that you can connect (GET) to a page and it returns a status 200
       uri:
-        url: http://dockerhost:18080
+        url: http://localhost:8080
         return_content: yes
       register: webpage
+      until: webpage.status == 200
+      retries: 10
+      delay: 2
