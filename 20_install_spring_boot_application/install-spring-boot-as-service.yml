@@ -2,7 +2,8 @@
 
 - hosts: all
   vars:
-    full_path_to_jar_at_dest: /opt/spring-petclinic-1.5.1.jar
+    application_name: spring-petclinic-1.5.1
+    service_name: myservice
   gather_facts: True
   tasks:
     - name: Update cache and install java
@@ -14,28 +15,27 @@
       become_user: root
     - name: Copy petclinic executable to hosts
       copy:
-        src: /project/spring-petclinic/target/spring-petclinic-1.5.1.jar
-        dest: "{{full_path_to_jar_at_dest}}"
+        src: /project/spring-petclinic/target/{{application_name}}.jar
+        dest: /opt/{{application_name}}.jar
         owner: ubuntu
         group: ubuntu
         mode: 0755
       become: true
-    - name: install petclinic systemd unit file
+    - name: create executable petclinic service
       template:
         src: service.j2
-        dest: /etc/systemd/system/myservice.service
+        dest: /etc/systemd/system/{{service_name}}.service
         mode: 0755
       become: true
     - name: restart petclinic service
       systemd:
         state: restarted
         daemon_reload: yes
-        name: myservice
+        name: "{{service_name}}"
       become: true
     - name: Check that you can connect (GET) to a page and it returns a status 200
       uri:
         url: http://localhost:8080
-        return_content: yes
       register: webpage
       until: webpage.status == 200
       retries: 10
