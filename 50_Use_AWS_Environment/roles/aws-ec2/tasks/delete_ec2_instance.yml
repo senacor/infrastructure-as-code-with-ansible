@@ -1,0 +1,15 @@
+---
+- name: lookup running ec2 instances
+  ec2_remote_facts:
+    region: "{{region}}"
+    filters:
+      "tag:Name": "{{ec2.name}}"
+      instance-state-name: running
+  register: result_ec2
+
+- name: Terminate running instances
+  ec2:
+    region: "{{region}}"
+    state: 'absent'
+    instance_ids: '{{ item.id }}'
+  with_items: '{{ result_ec2.instances | default([]) }}'
