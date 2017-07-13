@@ -1,0 +1,39 @@
+- hosts: web
+  gather_facts: True
+  become: yes
+  tasks:
+  - name: Update cache and install nginx
+    apt:
+      name: nginx
+      state: present
+      update_cache: yes
+  - name: update nginx cfg with proxy pass
+    lineinfile:
+      path: /etc/nginx/sites-available/default
+      regexp: '^\s*try_files \$uri \$uri/ =404;'
+      line: 'proxy_pass http://127.0.0.1:8080;'
+      backrefs: yes
+    notify: "nginx restart"
+  - name: install nginx systemd
+    template:
+      src: nginx-service.j2
+      dest: /etc/systemd/system/nginx.service
+      mode: 0755
+  - name: restart nginx service
+    systemd:
+      state: restarted
+      daemon_reload: yes
+      name: nginx
+
+  handlers:
+  - name: restart nginx
+    service: name=nginx state=restarted
+    listen: "nginx restart"
+  - name: Check that you can connect (GET) to a page and it returns a status 200
+    uri:
+      url: http://127.0.0.1:80
+    register: webpage
+    until: webpage.status == 200
+    retries: 10
+    delay: 2
+    listen: "nginx restart"
