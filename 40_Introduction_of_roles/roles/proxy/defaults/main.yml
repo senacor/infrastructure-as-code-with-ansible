@@ -1,0 +1,3 @@
+---
+
+nginx_default_site: '/etc/nginx/sites-available/default'
