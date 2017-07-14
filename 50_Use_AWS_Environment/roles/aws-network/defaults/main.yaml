@@ -1,5 +1,5 @@
-region: eu-west-1
-application_name: ansible-aws-pedclinic
+region: eu-central-1
+application_name: ansible-aws-pedclinic-martin-stefan
 cost_center: DevOps
 status: present
 
