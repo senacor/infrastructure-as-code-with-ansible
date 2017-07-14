@@ -1,0 +1,10 @@
+---
+
+# Try to ping the vagrant vm to check if the setup works
+- hosts: service
+  tasks:
+  - name: install java
+    apt:
+      name: default-jre
+      state: latest
+    become: true

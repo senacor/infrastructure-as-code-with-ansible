@@ -24,7 +24,7 @@ To get an executable jar-file please add the following configuration to the Spri
     
 Run an Maven installation, with simple
 
-    mvnw clean install
+    mvn clean install
 
 Now copy the SpringBoot jar into the files folder of the exercise.
     

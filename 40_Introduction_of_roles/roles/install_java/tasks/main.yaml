@@ -1,0 +1,12 @@
+---
+
+# Install Java
+#- hosts: service
+- name: install java
+  apt:
+    name: default-jre
+    state: latest
+  become: true
+
+- debug:
+    msg: Yo I am installing Java!

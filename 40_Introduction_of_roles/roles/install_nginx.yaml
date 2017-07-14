@@ -1,0 +1,30 @@
+---
+
+
+  - name: install nginx
+    apt:
+      name: nginx
+      update_cache: yes
+
+  - name: change the default port config
+    replace:
+      path: /etc/nginx/sites-available/default
+      regexp: 'try_files \$uri \$uri\/ =404;'
+      replace: 'proxy_pass http://127.0.0.1:8080;'
+    become: true
+    notify:
+      - restart nginx
+
+  - name: service nginx start
+    service:
+      name: nginx
+      state: started
+
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: true
+

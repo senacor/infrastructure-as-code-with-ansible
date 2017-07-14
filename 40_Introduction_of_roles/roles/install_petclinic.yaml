@@ -1,0 +1,32 @@
+---
+
+
+vars:
+  jar: spring-petclinic-1.5.1.jar
+
+tasks:
+- name: copy pet-clinic jar
+  copy:
+    src: /project/20_install_spring_boot_application/files/{{jar}}
+    dest: /home/ubuntu
+
+- name: give executable rights
+  file:
+    path: /home/ubuntu/{{jar}}
+    mode: 0777
+
+- name: install pet_clinic systemd unit file
+  template: src=template.j2 dest=/etc/systemd/system/pet_clinic.service
+  become: true
+
+- name: start pet_clinic
+  systemd: state=started name=pet_clinic daemon_reload=yes enabled=yes
+  become: true
+
+- name: loop test
+  uri:
+    url: http://localhost:8080
+  register: webpage
+  until: webpage.status == 200
+  retries: 5
+  delay: 5
