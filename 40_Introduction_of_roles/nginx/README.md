@@ -1,7 +1,7 @@
-Role Name
+Nginx
 =========
 
-A brief description of the role goes here.
+Installs and starts the nginx server
 
 Requirements
 ------------
