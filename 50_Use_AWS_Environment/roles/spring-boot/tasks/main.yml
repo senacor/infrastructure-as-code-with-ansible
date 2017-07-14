@@ -1,0 +1,25 @@
+---
+# task file for spring-boot
+- name: 'Ensure spring boot app exists on remote machine'
+  copy: 
+    src: /project/spring-petclinic/target/spring-petclinic-1.5.1.jar
+    dest: /home/ubuntu/
+    mode: "a+rx"
+- name: 'Ensure systemd script for petclinic exists'
+  copy:
+    src: petclinic.service
+    dest: /etc/systemd/system/
+    mode: "a+rx"
+- name: 'Ensure petclinic service is registered'
+  systemd:
+    name: petclinic.service
+    enabled: yes
+    daemon-reload: yes
+    state: restarted
+- name: ping application
+  uri:
+    url: http://localhost:80
+  register: webpage
+  until: webpage.status==200
+  retries: 10
+  delay: 3

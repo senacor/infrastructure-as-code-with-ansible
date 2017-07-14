@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - spring-boot
+  tasks:
+  - name: ping application
+    uri:
+      url: http://localhost:80
+    register: webpage
+    until: webpage.status==200
+    retries: 10
+    delay: 3
