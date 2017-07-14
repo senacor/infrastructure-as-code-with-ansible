@@ -1,0 +1,26 @@
+status: "present"
+
+ec2_webserver: {
+  ami_image: ami-6d48500b,
+  instance_type: t2.micro,
+  sg_name: "{{application_name}}-sg-elb",
+  name: "{{ application_name }}_webserver",
+  subnet_usage_tag: ELB,
+  tag_provisioning_group: web
+}
+
+ec2_appserver: {
+  ami_image: ami-6d48500b,
+  instance_type: t2.micro,
+  sg_name: "{{application_name}}-sg-esc",
+  name: "{{ application_name }}_application",
+  subnet_usage_tag: APP,
+  tag_provisioning_group: service,
+}
+
+ansible_ec2_userdata: |
+  MIME-Version: 1.0
+  Content-Type: text/text/x-shellscript; charset="us-ascii"
+  #!/bin/bash
+
+  sudo apt -y install python

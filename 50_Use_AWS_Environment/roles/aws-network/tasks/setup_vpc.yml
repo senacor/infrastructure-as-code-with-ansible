@@ -1,0 +1,34 @@
+
+- name: Does an VPC with the given name alredy exist
+  ec2_vpc_net_facts:
+    region: "{{region}}"
+    filters:
+      "tag:Name": "{{application_name}}-vpc"
+  register: vpc_test
+
+- name: Set informatiom from existing VPC
+  set_fact:
+    vpc: "{{vpc_test.vpcs[0]}}"
+  when: vpc_test.vpcs != []
+
+- name: Ensure that the VPC exits
+  ec2_vpc_net:
+    name: "{{application_name}}-vpc"
+    cidr_block: "{{vpc_cidr_block}}"
+    region: "{{region}}"
+    tags:
+      module: ec2_vpc_net
+      CostCenter: "{{cost_center}}"
+      Name: "{{application_name}}-vpc"
+    tenancy: default
+    multi_ok: no
+  register: vpc_result
+  when: vpc_test.vpcs == []
+
+- name: Set informatiom from created VPC
+  set_fact:
+    vpc: "{{vpc_result.vpc}}"
+  when: vpc_test.vpcs == []
+
+- name: debug the vpc
+  debug: msg={{vpc}}

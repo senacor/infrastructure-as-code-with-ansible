@@ -1,0 +1,14 @@
+---
+- name: lookup running ec2 instances
+  ec2_remote_facts:
+    region: "{{region}}"
+    filters:
+      "tag:Name": "{{ec2.name}}"
+      instance-state-name: running
+  register: result_ec2
+
+- name: Add ec2 instance as ansible host
+  add_host:
+    groups: "{{host_group}}"
+    name: "{{item.public_dns_name}}"
+  with_items: "{{result_ec2.instances}}"

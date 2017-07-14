@@ -1,0 +1,10 @@
+- name: Ansible Pet-clinic in AWS | Provision all required infrastructure
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+     -  { role: aws-ec2, tags: ['ec2']}
+     -  { role: aws-security, tags: ['security']}
+     -  { role: aws-network, tags: ['network']}
+  vars:
+     - status: absent

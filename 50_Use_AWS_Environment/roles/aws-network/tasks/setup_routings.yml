@@ -1,0 +1,81 @@
+---
+
+- name: receive the name of the public subnetwork to add the NAT Gatway
+  ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: "{{vpc.id}}"
+      "tag:Networkkind": "public"
+    region: "{{region}}"
+  register: public_subnet_results
+
+- name: Set informatiom from existing VPC
+  set_fact:
+    public_subnets: "{{ public_subnet_results.subnets|map(attribute='id')|list() }}"
+  when: public_subnet_results is defined
+
+- name: Set up public subnet route table
+  ec2_vpc_route_table:
+    vpc_id: "{{vpc.id}}"
+    region: "{{region}}"
+    tags:
+      Name: "{{application_name}}-public-rt"
+      Type: "custom"
+    subnets: "{{public_subnets}}"
+    routes:
+      - dest: "{{vpc_cidr_block}}"
+        gateway_id: "local"
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw.gateway_id }}"
+  register: public_route_table
+
+- name: receive the name of the public subnetwork to add the NAT Gatway
+  ec2_vpc_subnet_facts:
+    filters:
+      "tag:NAT": "yes"
+    region: "{{region}}"
+  register: public_subnet_nat
+
+- name: Create new nat gateway and allocate new EIP if a nat gateway does not yet exist in the subnet.
+  ec2_vpc_nat_gateway:
+    state: present
+    subnet_id: "{{public_subnet_nat.subnets.0.id}}"
+    wait: yes
+    region: "{{region}}"
+    if_exist_do_not_create: true
+  register: public_nat_gateway
+
+- name: debug the NAT
+  debug: msg={{public_nat_gateway}}
+
+
+- name: receive the name of the private subnetwork
+  ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: "{{vpc.id}}"
+      "tag:Networkkind": "private"
+    region: "{{region}}"
+  register: private_subnet_results
+
+- name: Set informatiom from existing VPC
+  set_fact:
+    private_subnets: "{{ private_subnet_results.subnets|map(attribute='id')|list() }}"
+  when: private_subnet_results is defined
+
+- name: Set up private subnet route table
+  ec2_vpc_route_table:
+    vpc_id: "{{vpc.id}}"
+    region: "{{region}}"
+    tags:
+      Name: "{{application_name}}-private-rt"
+      Type: "custom"
+    subnets: "{{private_subnets}}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ public_nat_gateway.nat_gateway_id }}"
+      - dest: "{{vpc_cidr_block}}"
+        gateway_id: "local"
+  register: private_route_table
+
+
+- name: debug the RT
+  debug: msg={{private_route_table}}
