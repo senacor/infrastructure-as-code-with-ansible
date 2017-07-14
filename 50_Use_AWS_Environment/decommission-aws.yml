@@ -3,8 +3,8 @@
   connection: local
   gather_facts: no
   roles:
-     -  aws-ec2
-     -  aws-security
-     -  aws-network
+     -  { role: aws-ec2, tags: ['ec2']}
+     -  { role: aws-security, tags: ['security']}
+     -  { role: aws-network, tags: ['network']}
   vars:
      - status: absent
