@@ -1,4 +1,4 @@
-region: eu-west-1
+region: eu-west-2
 application_name: ansible-aws-pedclinic
 cost_center: DevOps
 status: present

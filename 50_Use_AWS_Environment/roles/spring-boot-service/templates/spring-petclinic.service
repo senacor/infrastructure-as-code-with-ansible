@@ -1,0 +1,10 @@
+[Unit]
+Description=pet_clinic
+After=syslog.target
+
+[Service]
+User=root
+ExecStart="/opt/{{service_name}}-{{version}}.jar" SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

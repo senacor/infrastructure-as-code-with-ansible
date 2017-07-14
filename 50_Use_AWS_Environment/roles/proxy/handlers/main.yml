@@ -1,0 +1,24 @@
+---
+
+- name: check health
+  listen: 'check health'
+  uri:
+    return_content: yes
+    url: http://localhost:80
+  register: health_check_content
+  until:
+    - health_check_content.status == 200
+    - "'clinic' in health_check_content.content"
+  retries: 5
+  delay: 5
+- name: reload nginx
+  listen: 'reload nginx'
+  systemd:
+    name: nginx
+    state: reloaded
+  notify: 'check health'
+
+#    - name: check content
+#      listen: 'check health'
+#      fail:
+#      when: "'clinic' not in health_check_content.content"

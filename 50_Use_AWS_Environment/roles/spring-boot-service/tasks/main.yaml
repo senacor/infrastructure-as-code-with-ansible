@@ -1,0 +1,29 @@
+---
+
+- name: Ensure latest Pet-Clinic build is copied to host
+  become: true
+  copy:
+    src: "files/{{service_name}}-{{version}}.jar"
+    dest: "/opt/{{service_name}}-{{version}}.jar"
+    owner: root
+    group: root
+    mode: 0755
+- name: Ensure SystemD-App configuration has the latest version
+  become: true
+  template:
+    src: "{{service_name}}.service"
+    dest: "/etc/systemd/system/{{service_name}}.service"
+- name: Ensure service is running the newest version
+  become: true
+  systemd:
+      state: restarted
+      daemon_reload: yes
+      name: "{{service_name}}"
+- name: Check that health check is successful
+  uri:
+    return_content: no
+    url: http://localhost:8080
+  register: health_check_content
+  until: health_check_content.status == 200
+  retries: 5
+  delay: 5

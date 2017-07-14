@@ -1,0 +1,6 @@
+---
+
+- hosts: service
+  roles:
+    - java-environment
+    - {role: spring-boot-service, service_name: "{{service}}", version: "{{service_version}}"}

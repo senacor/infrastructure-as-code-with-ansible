@@ -1,7 +1,7 @@
-region: eu-west-1
-ami-image: ami-6d48500b #depends on the region
+region: eu-west-2
+ami-image: ami-cc7066a8 #depends on the region
 accountid: 604370441254
-application_name: ansible-aws-pedclinic
+application_name: ansible-aws-pedclinic-feuth
 vpc_cidr_block: 10.0.10.0/16
 cost_center: DevOps
 
@@ -11,10 +11,10 @@ subnetwork_def:
     # public subnetworks
     - {az: "{{region}}a", cidir: 10.0.1.0/24, Name: "{{application_name}}-nw-public-a", nat: "yes", Networkkind: public, CostCenter: "{{cost_center}}", Usage: "ELB" }
     - {az: "{{region}}b", cidir: 10.0.2.0/24, Name: "{{application_name}}-nw-public-b", nat: "no" , Networkkind: public, CostCenter: "{{cost_center}}", Usage: "APP" }
-    - {az: "{{region}}c", cidir: 10.0.3.0/24, Name: "{{application_name}}-nw-public-c", nat: "no" , Networkkind: public, CostCenter: "{{cost_center}}", Usage: "APP" }
+    - {az: "{{region}}a", cidir: 10.0.3.0/24, Name: "{{application_name}}-nw-public-c", nat: "no" , Networkkind: public, CostCenter: "{{cost_center}}", Usage: "APP" }
 
 ec2_webserver: {
-  ami_image: ami-6d48500b,
+  ami_image: ami-cc7066a8,
   instance_type: t2.micro,
   sg_name: "{{application_name}}-sg-elb",
   name: "{{ application_name }}_webserver",
@@ -23,10 +23,13 @@ ec2_webserver: {
 }
 
 ec2_appserver: {
-  ami_image: ami-6d48500b,
+  ami_image: ami-cc7066a8,
   instance_type: t2.micro,
   sg_name: "{{application_name}}-sg-esc",
   name: "{{ application_name }}_application",
   subnet_usage_tag: APP,
   tag_provisioning_group: service,
 }
+
+service: 'spring-petclinic'
+service_version: '1.5.1'

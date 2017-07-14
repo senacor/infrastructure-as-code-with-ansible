@@ -18,7 +18,7 @@
 
   - set_fact:
       ec2: "{{ec2_appserver}}"
-      host_group: services
+      host_group: service
 
   - include: setup_ec2_instance.yml
   - include: add_hosts.yml
