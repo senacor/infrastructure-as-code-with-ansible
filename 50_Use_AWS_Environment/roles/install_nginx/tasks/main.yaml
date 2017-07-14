@@ -12,7 +12,9 @@
   replace:
     path: /etc/nginx/sites-available/default
     regexp: 'try_files \$uri \$uri\/ =404;'
-    replace: 'proxy_pass http://127.0.0.1:8080;'
+    #regexp: 'http:\/\/ec2-34-250-169-123.eu-west-1.compute.amazonaws.com;'
+    #replace: 'proxy_pass http://127.0.0.1:8080;'
+    replace: 'proxy_pass http://10.0.2.240:8080;'
   become: true
   notify:
     - restart nginx
