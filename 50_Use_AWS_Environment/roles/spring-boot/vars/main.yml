@@ -1,0 +1,2 @@
+---
+app: { user: petclinic, service: petclinic, filename: spring-petclinic-1.5.1.jar, desc: Spring Boot Petclinic }

@@ -1,0 +1,10 @@
+[Unit]
+Description={{app.desc}}
+After=syslog.target
+
+[Service]
+User={{app.user}}
+ExecStart=/home/{{app.user}}/{{app.filename}} SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
