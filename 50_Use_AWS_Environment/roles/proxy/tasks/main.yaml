@@ -5,17 +5,11 @@
     update_cache: yes
     name: nginx
     state: latest
-- name: Ensure proxy_pass in default sites-available is set
-  lineinfile:
-    path: "{{nginx_default_site}}"
-    line: 'proxy_pass http://localhost:8080;'
-    insertafter: '^\s+location / \{'
-  notify: 'reload nginx'
-- name: Ensure default for static content is deleted
-  lineinfile:
-    path: "{{nginx_default_site}}"
-    state: absent
-    regexp: '^\s+try_files.+'
+
+- name: Ensure hosts are added to load balancer config
+  template:
+      src: "default.j2"
+      dest: "/etc/nginx/sites-available/default"
   notify: 'reload nginx'
 
 

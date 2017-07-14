@@ -1,0 +1,13 @@
+upstream petclinic_service {
+    {% for service in hostvars['localhost']['public_dns_names'].values() %}
+        server {{service}}:8080;
+    {% endfor %}
+}
+
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://petclinic_service;
+    }
+}

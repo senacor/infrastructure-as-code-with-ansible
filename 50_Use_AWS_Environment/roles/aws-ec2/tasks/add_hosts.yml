@@ -7,8 +7,13 @@
       instance-state-name: running
   register: result_ec2
 
+- set_fact:
+    public_dns_names: "{{ public_dns_names|default({}) | combine( {item.0: item.1.private_ip_address} ) }}"
+  with_indexed_items: "{{result_ec2.instances}}"
+
 - name: Add ec2 instance as ansible host
   add_host:
     groups: "{{host_group}}"
     name: "{{item.public_dns_name}}"
+    ansible_user: "ubuntu"
   with_items: "{{result_ec2.instances}}"
