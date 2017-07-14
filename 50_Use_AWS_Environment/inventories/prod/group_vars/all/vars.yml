@@ -1,7 +1,7 @@
 region: eu-west-1
 ami-image: ami-6d48500b #depends on the region
 accountid: 604370441254
-application_name: ansible-aws-pedclinic
+application_name: ansible-aws-pokemon
 vpc_cidr_block: 10.0.10.0/16
 cost_center: DevOps
 

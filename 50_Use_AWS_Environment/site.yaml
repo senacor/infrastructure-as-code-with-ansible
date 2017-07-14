@@ -1,0 +1,15 @@
+---
+
+# Import aws
+- include: commission-aws.yml
+- include: decommission-aws.yml
+
+# Import roles
+- hosts: service
+  roles:
+    - install_java
+    - install_petclinic
+
+- hosts: web
+  roles:
+    - install_nginx
