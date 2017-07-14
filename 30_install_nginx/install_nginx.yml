@@ -11,19 +11,21 @@
       path: "/etc/nginx/sites-available/default"
       regexp: "^[\\s\\t]*try_files"
       line: "proxy_pass http://127.0.0.1:8080;"
-    notify:
-    - restart nginx
-  - name: verify reachability
-    uri:
-      url: http://localhost:8080
-    register: result
-    until: result.status == 200
-    retries: 10
-    delay: 2
+      backrefs: yes
+    notify: "restart nginx"
   handlers:
     - name: restart nginx
       systemd:
         state: restarted
         daemon_reload: yes
         name: nginx
+      listen: "restart nginx"
+    - name: verify reachability
+      uri:
+        url: http://localhost:8080
+      register: result
+      until: result.status == 200
+      retries: 10
+      delay: 2
+      listen: "restart nginx"
 
