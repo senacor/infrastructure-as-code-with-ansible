@@ -50,7 +50,7 @@
       - proto: tcp
         from_port: 8080
         to_port: 8080
-        cidr_ip: "{{application_name}}-sg-elb"
+        group_name: "{{application_name}}-sg-elb"
 
 - name: Ensure Database Securitygroup is available
   ec2_group:
