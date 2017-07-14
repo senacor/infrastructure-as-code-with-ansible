@@ -2,3 +2,4 @@
 - hosts: service
   roles:
     - java
+    - spring-boot
