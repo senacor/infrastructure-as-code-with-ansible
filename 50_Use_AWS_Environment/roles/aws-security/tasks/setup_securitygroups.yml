@@ -47,6 +47,10 @@
         from_port: 31000
         to_port: 61000
         group_name: "{{application_name}}-sg-esc"
+      - proto: tcp
+        from_port: 8080
+        to_port: 8080
+        cidr_ip: "{{application_name}}-sg-elb"
 
 - name: Ensure Database Securitygroup is available
   ec2_group:
