@@ -1,0 +1,4 @@
+---
+- hosts: service
+  roles:
+    - java
