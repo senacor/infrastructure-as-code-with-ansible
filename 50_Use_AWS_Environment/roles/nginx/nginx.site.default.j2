@@ -1,0 +1,20 @@
+upstream {{application_name}} {
+    {% for dns_name in hostvars['localhost']['dns_names'] %}
+    server {{dns_name}}:8080;
+    {% endfor %}
+}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+      proxy_pass http://{{application_name}};
+    }
+}

@@ -1,0 +1,4 @@
+---
+- name: retrieve dns names
+  set_fact:
+    dns_names: "{{ result_ec2.instances | map(attribute='private_dns_name') | list() }}"
