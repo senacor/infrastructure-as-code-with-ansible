@@ -20,6 +20,7 @@
 - name: Setup EC2
   ec2:
     region: "{{region}}"
+    id: "{{ application_name }}_{{ec2.instance_type}}"
     key_name: "{{ application_name }}_key"
     image: "{{ec2.ami_image}}"
     instance_type: "{{ec2.instance_type}}"

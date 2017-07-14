@@ -28,9 +28,9 @@
     region: "{{region}}"
     state: absent
   register: task_result
-  until: task_result.rc == 0
-  retries: 10
-  delay: 5
+#  until: task_result.rc == 0
+#  retries: 10
+#  delay: 5
 
 - name: Ensure Loadbalancer Securitygroup is absent
   ec2_group:
@@ -40,9 +40,9 @@
     region: "{{region}}"
     state: absent
   register: task_result
-  until: task_result.rc == 0
-  retries: 10
-  delay: 5
+#  until: task_result.rc == 0
+#  retries: 10
+#  delay: 5
 
 
 
