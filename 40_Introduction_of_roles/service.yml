@@ -1,0 +1,7 @@
+- hosts: service
+  become: true
+  roles: 
+    - java
+    - spring-boot  
+  
+

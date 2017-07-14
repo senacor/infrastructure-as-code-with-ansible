@@ -1,8 +1,2 @@
-- hosts: web
-  become: true
-  roles: 
-    - nginx
-    - java
-    - spring-boot  
-  
-
+- include: web.yml
+- include: service.yml
