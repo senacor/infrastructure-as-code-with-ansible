@@ -28,9 +28,13 @@
     group_id: "{{vpc_sg_info.security_groups.0.group_id}}"
     assign_public_ip: true
     user_data: "{{ansible_ec2_userdata}}"
+    exact_count: 1
     instance_tags:
       Name: "{{ec2.name}}"
       CostCenter: "{{cost_center}}"
       ProvisioningGroup: "{{ec2.tag_provisioning_group}}"
-    count_tag: "{{ec2.name}}"
+      AZ: "{{item.availability_zone}}"
+    count_tag:
+      Name: "{{ec2.name}}"
+      AZ: "{{item.availability_zone}}"
   with_items: "{{public_subnet_results.subnets | default([]) }}"
