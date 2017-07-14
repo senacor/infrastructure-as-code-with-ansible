@@ -1,0 +1,40 @@
+---
+- name: Create ssh key pair
+  ec2_key:
+    region: "{{region}}"
+    name: "{{ application_name }}_key"
+    key_material: "{{ item }}"
+  with_file: /root/.ssh/id_rsa.pub
+
+- include: gather_information.yml
+
+- block:
+  - set_fact:
+      ec2: "{{ec2_webserver}}"
+      host_group: web
+
+  - include: setup_ec2_instance.yml
+  - include: add_hosts.yml
+
+  - set_fact:
+      ec2: "{{ec2_appserver}}"
+      host_group: services
+
+  - include: setup_ec2_instance.yml
+  - include: add_hosts.yml
+
+  when: status == "present"
+
+- block:
+
+  - set_fact:
+      ec2: "{{ec2_webserver}}"
+
+  - include: delete_ec2_instance.yml
+
+  - set_fact:
+      ec2: "{{ec2_appserver}}"
+
+  - include: delete_ec2_instance.yml
+
+  when: status == "absent"

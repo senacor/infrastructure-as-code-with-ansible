@@ -8,14 +8,18 @@ Not very impressive!
 Lets have a closer look to the next stages: Lets automatically create an environment in AWS and use it to provision
 our application!
 
-For that, don't wast your time of writing the environment setup by yourself, please have a look at ansible galaxy and 
-find a fitting role there. I like these roles pritty well:
-* daniel-rhoades.aws-vpc-role
-* daniel-rhoades.aws-security-groups-role
+For that, don't wast your time of writing the environment setup by yourself, please have a look at existing roles in 
+the roles section:
 
-They create the necessary network setup for AWS. So that you just have to create some EC2 instances. 
+* aws-network
+* aws-security
+* aws-ec2
 
-After creating the AWS resources they can be easily integration into Ansible via dynamic repository. 
+
+They create the necessary AWS setup. 
+
+After creating the AWS resources they can be easily integration into Ansible via dynamic repository or adding them via.
+ad_host module. 
 
 
 ## Task:
@@ -23,13 +27,13 @@ After creating the AWS resources they can be easily integration into Ansible via
 In this exercise we will enhance the solution of excercise 4, so please copy your previous solution or the one from the 
 result branch to setup your exercise folder. 
 
-* Create two yaml file, on for commission and on for decommission the AWS environment
-* Integrate the two roles from ansible galaxy into the playbooks
-* Create a role to create EC2 instances for the web and service role.
-* Use the dynamic inventory when provisioning the playbook.
+* Include thw two yaml file, into youre side to setup the AWS environment. (only for Production)
+* Create a setup to install one EC2 instance with nginx and two with the pet shop
+* Update the nginx role to forward to the app EC2 instance
 
 ## Test
 
+Call the service in AWS. 
 
      
       
