@@ -1,0 +1,25 @@
+---
+- name: Copy petclinic executable to hosts
+  copy:
+    src: /project/spring-petclinic/target/{{application_name}}.jar
+    dest: /opt/{{application_name}}.jar
+    owner: ubuntu
+    group: ubuntu
+    mode: 0755
+- name: create executable petclinic service
+  template:
+    src: service.j2
+    dest: /etc/systemd/system/{{service_name}}.service
+    mode: 0755
+- name: restart petclinic service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: "{{service_name}}"
+- name: Check that you can connect (GET) to a page and it returns a status 200
+  uri:
+    url: http://localhost:8080
+  register: webpage
+  until: webpage.status == 200
+  retries: 10
+  delay: 2

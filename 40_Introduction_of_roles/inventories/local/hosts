@@ -1,0 +1,6 @@
+[web]
+127.0.0.1:2222 ansible_user=ubuntu
+
+[service]
+127.0.0.1:2222 ansible_user=ubuntu
+
