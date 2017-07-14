@@ -16,3 +16,10 @@
     enabled: yes
     daemon-reload: yes
     state: restarted
+- name: ping application
+  uri:
+    url: http://localhost:80
+  register: webpage
+  until: webpage.status==200
+  retries: 10
+  delay: 3
