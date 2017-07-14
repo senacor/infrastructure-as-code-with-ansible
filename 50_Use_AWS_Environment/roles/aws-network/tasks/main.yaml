@@ -1,0 +1,19 @@
+---
+
+# block to setup the network
+- block:
+  - include: setup_vpc.yml
+  - include: setup_subnets.yml
+  - include: setup_routings.yml
+
+  when: status == "present"
+
+# block to delete the network
+- block:
+  - include: delete_network.yml
+  
+  when: status == "absent"
+
+
+
+

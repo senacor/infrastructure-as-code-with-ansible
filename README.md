@@ -22,7 +22,7 @@ We will use an vagrant vm as a local test environment. The vagrant file located 
  
 After installing VirtualBox and Vagrant run the following command inside the VMs folder to startup the ubunto box:
 
-    vagrand up
+    vagrant up
     
 This command will startup an Ubunto VM inside you VirtualBox. You can ssh into this Box with the next command:
 
@@ -50,7 +50,7 @@ A more detailed description you will find here: https://github.com/kochp/ansible
     
 Than startup docker container for bash with all necessary tools in the root folder of the project:
 
-    docker run --net="host" -ti -v $(pwd):/project -v ~/.aws:/root/.aws -v $HOME/.ssh:/root/.ssh  -v /var/run/docker.sock:/var/run/docker.sock kochp/ansible-aws-bash:v1.4  bash 
+    docker run --net="host" -ti -v $(pwd):/project -v ~/.aws:/root/.aws -v $HOME/.ssh:/root/.ssh  -v /var/run/docker.sock:/var/run/docker.sock -v ~/.m2:/root/.m2 kochp/ansible-aws-bash:v1.4  bash 
 
 **Caution:** If you use windows you have to fulfill some additional task, see description in the GitHub repository.
 

@@ -1,0 +1,36 @@
+---
+
+
+- name: receive the name of the subnetwork for the webserver
+  ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: "{{vpc.id}}"
+      "tag:Usage": "{{ec2.subnet_usage_tag}}"
+    region: "{{region}}"
+  register: public_subnet_results
+
+- name: Gather Security Group facts
+  ec2_group_facts:
+    region: "{{region}}"
+    filters:
+     "group_name": "{{ec2.sg_name}}"
+  register: vpc_sg_info
+
+
+- name: Setup EC2
+  ec2:
+    region: "{{region}}"
+    #id: "{{ec2.name}}"
+    key_name: "{{ application_name }}_key"
+    image: "{{ec2.ami_image}}"
+    instance_type: "{{ec2.instance_type}}"
+    vpc_subnet_id: "{{item.id}}"
+    group_id: "{{vpc_sg_info.security_groups.0.group_id}}"
+    assign_public_ip: true
+    user_data: "{{ansible_ec2_userdata}}"
+    instance_tags:
+      Name: "{{ec2.name}}"
+      CostCenter: "{{cost_center}}"
+      ProvisioningGroup: "{{ec2.tag_provisioning_group}}"
+    count_tag: "{{ec2.name}}"
+  with_items: "{{public_subnet_results.subnets | default([]) }}"

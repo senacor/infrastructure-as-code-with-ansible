@@ -1,0 +1,13 @@
+---
+
+- name: Does an VPC with the given name alredy exist
+  ec2_vpc_net_facts:
+    region: "{{region}}"
+    filters:
+      "tag:Name": "{{application_name}}-vpc"
+  register: vpc_test
+
+- name: Set informatiom from existing VPC
+  set_fact:
+    vpc: "{{vpc_test.vpcs[0]}}"
+  when: vpc_test.vpcs != []

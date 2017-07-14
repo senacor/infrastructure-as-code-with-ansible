@@ -1,0 +1,8 @@
+---
+
+- include: setup_securitygroups.yml
+  when: status == "present"
+
+
+- include: delete_securitygroups.yml
+  when: status == "absent"
