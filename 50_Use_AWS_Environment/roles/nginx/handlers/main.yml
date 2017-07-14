@@ -5,11 +5,11 @@
     daemon_reload: yes
     name: nginx
   listen: "restart nginx"
-- name: verify reachability
-  uri:
-    url: http://localhost:8080
-  register: result
-  until: result.status == 200
-  retries: 10
-  delay: 2
-  listen: "restart nginx"
+#- name: verify reachability
+#  uri:
+#    url: http://localhost:8080
+#  register: result
+#  until: result.status == 200
+#  retries: 10
+#  delay: 2
+#  listen: "restart nginx"

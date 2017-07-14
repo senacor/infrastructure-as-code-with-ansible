@@ -1,0 +1,4 @@
+---
+- include: commission-aws.yml
+- include: web.yml
+- include: service.yml

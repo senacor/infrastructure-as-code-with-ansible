@@ -4,10 +4,9 @@
     update_cache: yes
     name: nginx
     state: latest
-- name: map port 80 to 8080
-  lineinfile:
-    path: "/etc/nginx/sites-available/default"
-    regexp: "^[\\s\\t]*try_files"
-    line: "proxy_pass http://127.0.0.1:8080;"
-    backrefs: yes
+- name: replace default config
+  template:
+    src: nginx.site.default.j2
+    dest: /etc/nginx/sites-available/default
+    mode: 0644
   notify: "restart nginx"
