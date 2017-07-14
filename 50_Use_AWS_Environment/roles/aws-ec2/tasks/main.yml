@@ -15,6 +15,7 @@
 
   - include: setup_ec2_instance.yml
   - include: add_hosts.yml
+  - include: retrieve_hostnames.yml
 
   - set_fact:
       ec2: "{{ec2_appserver}}"

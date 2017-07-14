@@ -1,0 +1,32 @@
+---
+- name: create user {{app.user}}
+  become: true
+  user:
+    name: "{{app.user}}"
+- name: copy jar file
+  become: true
+  copy:
+    src: "{{app.filename}}"
+    dest: /home/{{app.user}}/{{app.filename}}
+    owner: "{{app.user}}"
+    mode: 0744
+- name: create systemd config
+  become: true
+  template:
+    src: spring-boot.service.j2
+    dest: /etc/systemd/system/{{app.service}}.service
+    owner: "{{app.user}}"
+    mode: 0644
+- name: "{{app.service}} is running"
+  become: true
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: "{{app.service}}"
+- name: make sure the app is running
+  uri:
+    url: http://localhost:8080/
+  register: webpage
+  until: webpage.status == 200
+  retries: 10
+  delay: 2
