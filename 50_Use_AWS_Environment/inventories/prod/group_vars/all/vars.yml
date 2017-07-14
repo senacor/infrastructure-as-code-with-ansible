@@ -4,6 +4,7 @@ accountid: 604370441254
 application_name: home-of-the-beast-clinic
 vpc_cidr_block: 10.0.10.0/16
 cost_center: DevOps
+ansible_ssh_user: ubuntu
 
 env: prod
 
