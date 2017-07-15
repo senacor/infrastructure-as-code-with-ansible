@@ -6,10 +6,38 @@ Follow the instructions below as preparation of the training.
 
 The following tool are needed as precondition and have to be installed:
  
- * Docker
+ * Docker (*** Docker Toolbox for Windows users)
  * Virtual Box
  * Vagrant
  * An existing ssh key under ~/.ssh/id_rsa
+
+## Docker setup for Windows (skip this section if using Mac)
+### Check that Virtualization is enabled in BIOS
+First check that Virualization is enabled on by going to Task Manager > Performance > CPU > Virtualization should be set to true.
+
+<img src="/img/virtualization.PNG" width=500px>
+
+If not, restart your computer, go to BIOS and Security > Virtualization > Enabled
+
+### Install Docker Toolbox instead of Docker for Windows
+Make sure to uninstall Git for Windows (if you have installed it previously).
+
+Leave the following checkboxes checked:
+
+<img src="/img/docker_toolbox_install.PNG" width=500px>
+
+For running Docker commands it is recmmended to use the Docker Quickstart Terminal.
+
+### Check Docker works
+
+To check if the instalation works, open the Docker Quickstart Terminal and type:
+
+    docker --version
+    docker run hello-world.
+
+If installed correctly you should see similar results:
+
+<img src="/img/docker_working_on_windows.PNG" width=500px>
 
 ## Setup the Vagrant environment 
 
@@ -52,7 +80,11 @@ Than startup docker container for bash with all necessary tools in the root fold
 
     docker run --net="host" -ti -v $(pwd):/project -v ~/.aws:/root/.aws -v $HOME/.ssh:/root/.ssh  -v /var/run/docker.sock:/var/run/docker.sock -v ~/.m2:/root/.m2 kochp/ansible-aws-bash:v1.4  bash 
 
-**Caution:** If you use windows you have to fulfill some additional task, see description in the GitHub repository.
+**Caution:** If you use windows you also have to mount a local directory into the virtual machine, see description in the GitHub repository.
+
+Once you start docker, check you can log into vagrant machine with:
+    
+    ssh ubuntu@dockerhost -p2222
 
 ## Test the training environment
 
@@ -81,10 +113,7 @@ The result should be:
      dockerhost                 : ok=1    changed=0    unreachable=0    failed=0   
      localhost                  : ok=1    changed=0    unreachable=0    failed=0  
 
-If the playbook could be executed without error you setup of the training environment was successful. 
-
-**Caution:** This setup is tested with a Mac. Maybe there are some problem with using windows.
-    
+If the playbook could be executed without error you setup of the training environment was successful.     
 
 
 
